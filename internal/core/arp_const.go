@@ -1,4 +1,4 @@
-package main
+package core
 
 const (
 	ARPOpRequest uint16 = 1
