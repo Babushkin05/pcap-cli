@@ -15,6 +15,7 @@ type Config struct {
 	Iface     string
 	MyIP      netip.Addr
 	MyMAC     net.HardwareAddr
+	RouterMAC net.HardwareAddr
 	GatewayIP netip.Addr // optional
 }
 
@@ -43,6 +44,9 @@ func (c Config) Validate() error {
 	}
 	if len(c.MyMAC) != 6 {
 		return errors.New("config: my_mac must be 6 bytes")
+	}
+	if len(c.RouterMAC) != 6 {
+		return errors.New("config: router_mac must be 6 bytes")
 	}
 	if c.GatewayIP.IsValid() && !c.GatewayIP.Is4() {
 		return errors.New("config: gateway_ip must be IPv4")
@@ -84,6 +88,7 @@ func (c *Config) UnmarshalYAML(unmarshal func(any) error) error {
 		Iface     string `yaml:"iface"`
 		MyIP      string `yaml:"my_ip"`
 		MyMAC     string `yaml:"my_mac"`
+		RouterMAC string `yaml:"router_mac"`
 		GatewayIP string `yaml:"gateway_ip,omitempty"`
 	}
 
@@ -110,6 +115,12 @@ func (c *Config) UnmarshalYAML(unmarshal func(any) error) error {
 		return fmt.Errorf("config: my_mac: %w", err)
 	}
 	cfg.MyMAC = mac
+
+	routerMAC, err := parseMAC(rc.RouterMAC)
+	if err != nil {
+		return fmt.Errorf("config: router_mac: %w", err)
+	}
+	cfg.RouterMAC = routerMAC
 
 	if strings.TrimSpace(rc.GatewayIP) != "" {
 		gw, err := parseIPv4(rc.GatewayIP)
