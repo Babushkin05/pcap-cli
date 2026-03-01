@@ -1,3 +1,5 @@
 cfg.yaml
 
 build/
+
+.DS_Store
