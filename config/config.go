@@ -15,8 +15,8 @@ type Config struct {
 	Iface     string
 	MyIP      netip.Addr
 	MyMAC     net.HardwareAddr
-	RouterMAC net.HardwareAddr
-	GatewayIP netip.Addr // optional
+	RouterMAC net.HardwareAddr // optional
+	GatewayIP netip.Addr       // optional
 }
 
 func LoadConfig(path string) (Config, error) {
