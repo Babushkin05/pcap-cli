@@ -48,7 +48,6 @@ func newRouterMACCmd(app *App) *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&force, "force", false, "Force ARP resolve even if router_mac is present in config")
 	cmd.Flags().BoolVar(&promisc, "promisc", true, "Enable promiscuous mode")
 	cmd.Flags().IntVar(&snaplen, "snaplen", 65535, "Snapshot length")
 	cmd.Flags().IntVar(&retries, "retries", 2, "How many ARP request attempts")
