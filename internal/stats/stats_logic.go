@@ -24,8 +24,8 @@ type Stats struct {
 
 	ARPPairsMatched int
 
-	BytesMyRouter int64 // суммарно в обе стороны
-	Drops         int   // из pcap stats (если получится)
+	BytesMyRouter int64 // total in both directions
+	Drops         int   // from pcap stats (if possible)
 }
 
 type StatsCollector struct {

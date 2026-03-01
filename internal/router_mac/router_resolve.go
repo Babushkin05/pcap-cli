@@ -10,7 +10,7 @@ import (
 )
 
 type RouterResolveParams struct {
-	// Настройки pcap/тайминги
+	// pcap/timing settings
 	SnapLen     int
 	Promisc     bool
 	ReadTimeout time.Duration

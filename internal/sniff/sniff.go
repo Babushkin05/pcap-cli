@@ -15,11 +15,11 @@ type SniffOptions struct {
 	SnapLen int
 	Promisc bool
 
-	// ReadTimeout нужен, чтобы цикл мог регулярно проверять ctx.Done().
-	// Если поставить BlockForever, остановка по ctx может “залипнуть” до следующего пакета.
+	// ReadTimeout is needed so the loop can regularly check ctx.Done().
+	// If BlockForever is set, ctx cancellation might "hang" until the next packet.
 	ReadTimeout time.Duration
 
-	// BPF по умолчанию "arp", но можно переопределить.
+	// BPF defaults to "arp", but can be overridden.
 	BPF string
 }
 

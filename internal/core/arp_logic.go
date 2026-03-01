@@ -10,7 +10,7 @@ import (
 type ARPEvent struct {
 	Timestamp time.Time
 
-	// Ethernet заголовок
+	// Ethernet header
 	SrcMAC net.HardwareAddr
 	DstMAC net.HardwareAddr
 

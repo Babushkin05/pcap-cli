@@ -53,5 +53,5 @@ func (c *ARPCorrelator) MatchedPairs() int { return c.matched }
 
 func (c *ARPCorrelator) PendingCount() int { return len(c.pending) }
 
-// чтобы не ругался импорт netip
+// to prevent import error
 var _ = netip.Addr{}

@@ -18,7 +18,7 @@ type ResolveOptions struct {
 	Iface       string
 	SnapLen     int
 	Promisc     bool
-	ReadTimeout time.Duration // чтобы проверять ctx.Done()
+	ReadTimeout time.Duration // to check ctx.Done()
 
 	WaitPerTry time.Duration
 	Retries    int
@@ -58,8 +58,8 @@ func ResolveMACByARP(ctx context.Context, opts ResolveOptions, myIP netip.Addr, 
 	}
 	defer h.Close()
 
-	// Слушаем только ARP, чтобы не тратить CPU.
-	// Reply всё равно будем матчить в коде по IP.
+	// Listen only to ARP to avoid CPU waste.
+	// Reply we will still match in code by IP.
 	if err := core.SetBPF(h, "arp"); err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func ResolveMACByARP(ctx context.Context, opts ResolveOptions, myIP netip.Addr, 
 		default:
 		}
 
-		// Отправляем ARP request (Ethernet broadcast).
+		// Send ARP request (Ethernet broadcast).
 		if err := h.WritePacketData(reqBytes); err != nil {
 			return nil, fmt.Errorf("resolve: send arp request: %w", err)
 		}
@@ -157,7 +157,7 @@ func buildARPRequestFrame(myMAC net.HardwareAddr, myIP netip.Addr, targetIP neti
 	buf := gopacket.NewSerializeBuffer()
 	opts := gopacket.SerializeOptions{
 		FixLengths:       true,
-		ComputeChecksums: false, // для ARP не нужно
+		ComputeChecksums: false, // not needed for ARP
 	}
 
 	if err := gopacket.SerializeLayers(buf, opts, &eth, &arp); err != nil {
