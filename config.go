@@ -45,7 +45,7 @@ func (c Config) Validate() error {
 	if len(c.MyMAC) != 6 {
 		return errors.New("config: my_mac must be 6 bytes")
 	}
-	if len(c.RouterMAC) != 6 {
+	if len(c.RouterMAC) != 0 && len(c.RouterMAC) != 6 {
 		return errors.New("config: router_mac must be 6 bytes")
 	}
 	if c.GatewayIP.IsValid() && !c.GatewayIP.Is4() {
@@ -72,7 +72,7 @@ func parseIPv4(s string) (netip.Addr, error) {
 func parseMAC(s string) (net.HardwareAddr, error) {
 	s = strings.TrimSpace(s)
 	if s == "" {
-		return nil, errors.New("empty")
+		return nil, nil
 	}
 	mac, err := net.ParseMAC(s)
 	if err != nil {
