@@ -16,11 +16,7 @@ type RouterResolveParams struct {
 	Retries     int
 }
 
-// ResolveRouterMACFromConfig:
-// - требует, чтобы в cfg был задан GatewayIP
-// - отправляет ARP request и ждёт reply
-// - возвращает MAC роутера
-func ResolveRouterMACFromConfig(ctx context.Context, cfg Config, p RouterResolveParams) (net.HardwareAddr, error) {
+func ResolveRouterMAC(ctx context.Context, cfg Config, p RouterResolveParams) (net.HardwareAddr, error) {
 	if cfg.RouterMAC != nil {
 		return cfg.RouterMAC, nil
 	}
