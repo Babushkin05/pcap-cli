@@ -1,10 +1,11 @@
-package main
+package sniff
 
 import (
 	"context"
 	"fmt"
 	"time"
 
+	"github.com/Babushkin05/pcap-cli/internal/core"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/pcap"
 )
@@ -22,7 +23,7 @@ type SniffOptions struct {
 	BPF string
 }
 
-func SniffARP(ctx context.Context, opts SniffOptions, cb func(ARPEvent)) error {
+func SniffARP(ctx context.Context, opts SniffOptions, cb func(core.ARPEvent)) error {
 	if cb == nil {
 		return fmt.Errorf("sniff: callback is nil")
 	}
@@ -33,7 +34,7 @@ func SniffARP(ctx context.Context, opts SniffOptions, cb func(ARPEvent)) error {
 		opts.ReadTimeout = 500 * time.Millisecond
 	}
 
-	h, err := OpenPcapHandle(CaptureOptions{
+	h, err := core.OpenPcapHandle(core.CaptureOptions{
 		Iface:   opts.Iface,
 		SnapLen: opts.SnapLen,
 		Promisc: opts.Promisc,
@@ -44,7 +45,7 @@ func SniffARP(ctx context.Context, opts SniffOptions, cb func(ARPEvent)) error {
 	}
 	defer h.Close()
 
-	if err := SetBPF(h, opts.BPF); err != nil {
+	if err := core.SetBPF(h, opts.BPF); err != nil {
 		return err
 	}
 
@@ -69,7 +70,7 @@ func SniffARP(ctx context.Context, opts SniffOptions, cb func(ARPEvent)) error {
 		p := gopacket.NewPacket(data, h.LinkType(), gopacket.NoCopy)
 		// Проставим timestamp из CaptureInfo (Packet.Metadata() иногда пустой при ручном NewPacket).
 		// Поэтому: если DecodeARPEvent вернул нулевой Timestamp, подставим ci.Timestamp.
-		e, ok := DecodeARPEvent(p)
+		e, ok := core.DecodeARPEvent(p)
 		if !ok {
 			continue
 		}

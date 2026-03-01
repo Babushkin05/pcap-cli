@@ -1,10 +1,12 @@
-package main
+package router_mac
 
 import (
 	"context"
 	"fmt"
 	"net"
 	"time"
+
+	"github.com/Babushkin05/pcap-cli/config"
 )
 
 type RouterResolveParams struct {
@@ -16,7 +18,7 @@ type RouterResolveParams struct {
 	Retries     int
 }
 
-func ResolveRouterMAC(ctx context.Context, cfg Config, p RouterResolveParams) (net.HardwareAddr, error) {
+func ResolveRouterMAC(ctx context.Context, cfg config.Config, p RouterResolveParams) (net.HardwareAddr, error) {
 	if cfg.RouterMAC != nil {
 		return cfg.RouterMAC, nil
 	}

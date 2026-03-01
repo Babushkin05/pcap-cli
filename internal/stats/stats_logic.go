@@ -1,9 +1,11 @@
-package main
+package stats
 
 import (
 	"fmt"
 	"net"
 	"time"
+
+	"github.com/Babushkin05/pcap-cli/internal/core"
 )
 
 type Stats struct {
@@ -32,7 +34,7 @@ type StatsCollector struct {
 
 	countPaddingTo60 bool
 
-	corr *ARPCorrelator
+	corr *core.ARPCorrelator
 	s    Stats
 }
 
@@ -57,7 +59,7 @@ func NewStatsCollector(opts StatsOptions) (*StatsCollector, error) {
 		myMAC:            append(net.HardwareAddr(nil), opts.MyMAC...),
 		routerMAC:        append(net.HardwareAddr(nil), opts.RouterMAC...),
 		countPaddingTo60: opts.CountEtherPaddingTo60,
-		corr:             NewARPCorrelator(opts.PairWindow),
+		corr:             core.NewARPCorrelator(opts.PairWindow),
 		s: Stats{
 			UniqueMACs: make(map[string]struct{}),
 		},
@@ -89,7 +91,7 @@ func (sc *StatsCollector) ObserveEthernet(ts time.Time, src, dst net.HardwareAdd
 		sc.s.UniqueMACs[dst.String()] = struct{}{}
 	}
 
-	if IsBroadcastMAC(dst) {
+	if core.IsBroadcastMAC(dst) {
 		sc.s.BroadcastEther++
 	}
 
@@ -112,13 +114,13 @@ func (sc *StatsCollector) ObserveEthernet(ts time.Time, src, dst net.HardwareAdd
 	sc.corr.Cleanup(ts)
 }
 
-func (sc *StatsCollector) ObserveARP(e ARPEvent) {
+func (sc *StatsCollector) ObserveARP(e core.ARPEvent) {
 	sc.s.TotalARPPackets++
 
-	if IsBroadcastMAC(e.DstMAC) {
+	if core.IsBroadcastMAC(e.DstMAC) {
 		sc.s.BroadcastARP++
 	}
-	if IsGratuitousARPRequest(e) {
+	if core.IsGratuitousARPRequest(e) {
 		sc.s.GratuitousARPRequests++
 	}
 

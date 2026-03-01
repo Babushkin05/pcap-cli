@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Babushkin05/pcap-cli/internal/stats"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +30,7 @@ func newStatsCmd(app *App) *cobra.Command {
 			ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 			defer stop()
 
-			sc, err := NewStatsCollector(StatsOptions{
+			sc, err := stats.NewStatsCollector(stats.StatsOptions{
 				MyMAC:                 app.Cfg.MyMAC,
 				RouterMAC:             app.Cfg.RouterMAC,
 				PairWindow:            pairWindow,
@@ -39,7 +40,7 @@ func newStatsCmd(app *App) *cobra.Command {
 				return err
 			}
 
-			st, err := CaptureStats(ctx, CaptureStatsOptions{
+			st, err := stats.CaptureStats(ctx, stats.CaptureStatsOptions{
 				Iface:       app.Cfg.Iface,
 				SnapLen:     snaplen,
 				Promisc:     promisc,

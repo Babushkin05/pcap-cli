@@ -8,6 +8,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Babushkin05/pcap-cli/internal/core"
+	"github.com/Babushkin05/pcap-cli/internal/sniff"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +24,7 @@ func newSniffCmd(app *App) *cobra.Command {
 			ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 			defer stop()
 
-			opts := SniffOptions{
+			opts := sniff.SniffOptions{
 				Iface:       app.Cfg.Iface,
 				SnapLen:     snaplen,
 				Promisc:     promisc,
@@ -30,8 +32,8 @@ func newSniffCmd(app *App) *cobra.Command {
 				BPF:         "arp",
 			}
 
-			return SniffARP(ctx, opts, func(e ARPEvent) {
-				fmt.Fprintln(cmd.OutOrStdout(), DescribeARP(e))
+			return sniff.SniffARP(ctx, opts, func(e core.ARPEvent) {
+				fmt.Fprintln(cmd.OutOrStdout(), core.DescribeARP(e))
 			})
 		},
 	}

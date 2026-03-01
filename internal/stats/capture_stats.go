@@ -1,10 +1,11 @@
-package main
+package stats
 
 import (
 	"context"
 	"fmt"
 	"time"
 
+	"github.com/Babushkin05/pcap-cli/internal/core"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
@@ -29,7 +30,7 @@ func CaptureStats(ctx context.Context, opts CaptureStatsOptions, sc *StatsCollec
 		opts.ReadTimeout = 200 * time.Millisecond
 	}
 
-	h, err := OpenPcapHandle(CaptureOptions{
+	h, err := core.OpenPcapHandle(core.CaptureOptions{
 		Iface:   opts.Iface,
 		SnapLen: opts.SnapLen,
 		Promisc: opts.Promisc,
@@ -74,7 +75,7 @@ func CaptureStats(ctx context.Context, opts CaptureStatsOptions, sc *StatsCollec
 		sc.ObserveEthernet(ci.Timestamp, eth.SrcMAC, eth.DstMAC, ci.Length)
 
 		// Если это ARP — обновляем ARP-статистику.
-		if e, ok := DecodeARPEvent(p); ok {
+		if e, ok := core.DecodeARPEvent(p); ok {
 			if e.Timestamp.IsZero() {
 				e.Timestamp = ci.Timestamp
 			}

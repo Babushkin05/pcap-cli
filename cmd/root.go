@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 
+	"github.com/Babushkin05/pcap-cli/config"
 	"github.com/spf13/cobra"
 )
 
 type App struct {
 	ConfigPath string
-	Cfg        Config
+	Cfg        config.Config
 }
 
 func newRootCmd() *cobra.Command {
@@ -21,7 +22,7 @@ func newRootCmd() *cobra.Command {
 			if app.ConfigPath == "" {
 				return fmt.Errorf("--config is required")
 			}
-			cfg, err := LoadConfig(app.ConfigPath)
+			cfg, err := config.LoadConfig(app.ConfigPath)
 			if err != nil {
 				return err
 			}

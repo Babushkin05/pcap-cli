@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Babushkin05/pcap-cli/internal/router_mac"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +32,7 @@ func newRouterMACCmd(app *App) *cobra.Command {
 				cfg.RouterMAC = nil
 			}
 
-			mac, err := ResolveRouterMAC(ctx, cfg, RouterResolveParams{
+			mac, err := router_mac.ResolveRouterMAC(ctx, cfg, router_mac.RouterResolveParams{
 				SnapLen:     snaplen,
 				Promisc:     promisc,
 				ReadTimeout: readTimeout,
