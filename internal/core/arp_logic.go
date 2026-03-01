@@ -37,7 +37,7 @@ func IsGratuitousARPRequest(e ARPEvent) bool {
 func DescribeARP(e ARPEvent) string {
 	ts := e.Timestamp
 	if ts.IsZero() {
-		// метаданные времени не пришли
+		// time metadata did not arrive
 		ts = time.Now()
 	}
 
@@ -68,10 +68,10 @@ func DescribeARP(e ARPEvent) string {
 	}
 }
 
-// Ключ для корреляции request/response.
+// Key for correlation of request/response.
 type ARPKey struct {
-	Requester netip.Addr // SPA запроса
-	Target    netip.Addr // TPA запроса
+	Requester netip.Addr // SPA request
+	Target    netip.Addr // TPA request
 }
 
 func KeyFromRequest(e ARPEvent) (ARPKey, bool) {
@@ -82,7 +82,7 @@ func KeyFromRequest(e ARPEvent) (ARPKey, bool) {
 }
 
 func KeyFromReplyAsRequestKey(e ARPEvent) (ARPKey, bool) {
-	// Reply: SPA = тот, кого спрашивали; TPA = кто спрашивал
+	// Reply: SPA = who was asked; TPA = who asked
 	if e.Op != ARPOpReply || !e.SenderIP.IsValid() || !e.TargetIP.IsValid() {
 		return ARPKey{}, false
 	}

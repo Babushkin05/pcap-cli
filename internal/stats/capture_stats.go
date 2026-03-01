@@ -60,21 +60,21 @@ func CaptureStats(ctx context.Context, opts CaptureStatsOptions, sc *StatsCollec
 			return Stats{}, fmt.Errorf("capture stats: read packet: %w", err)
 		}
 
-		// Декодируем Ethernet (для подсчёта фреймов/байт/unique/broadcast).
+		// Decode Ethernet (for counting frames/bytes/unique/broadcast).
 		p := gopacket.NewPacket(data, h.LinkType(), gopacket.NoCopy)
 
 		ethL := p.Layer(layers.LayerTypeEthernet)
 		if ethL == nil {
-			// На macOS en0 обычно Ethernet layer будет.
-			// Если нет — можно будет расширить под SLL и т.п.
+			// On macOS en0 Ethernet layer will usually be present.
+			// If not, we can extend support to SLL and others.
 			continue
 		}
 		eth := ethL.(*layers.Ethernet)
 
-		// frameLen: берём ci.Length (оригинальная длина пакета по мнению pcap)
+		// frameLen: take ci.Length (original packet length according to pcap)
 		sc.ObserveEthernet(ci.Timestamp, eth.SrcMAC, eth.DstMAC, ci.Length)
 
-		// Если это ARP — обновляем ARP-статистику.
+		// If this is ARP — update ARP statistics.
 		if e, ok := core.DecodeARPEvent(p); ok {
 			if e.Timestamp.IsZero() {
 				e.Timestamp = ci.Timestamp

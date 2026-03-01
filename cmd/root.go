@@ -33,7 +33,7 @@ func newRootCmd() *cobra.Command {
 
 	cmd.PersistentFlags().StringVar(&app.ConfigPath, "config", "", "Path to YAML config")
 
-	// Подкоманды
+	// Subcommands
 	cmd.AddCommand(newSniffCmd(app))
 	cmd.AddCommand(newRouterMACCmd(app))
 	cmd.AddCommand(newStatsCmd(app))

@@ -19,7 +19,7 @@ func DecodeARPEvent(p gopacket.Packet) (ARPEvent, bool) {
 	eth := ethL.(*layers.Ethernet)
 	arp := arpL.(*layers.ARP)
 
-	// Фокусируемся на ARP поверх Ethernet для IPv4.
+	// Focus on ARP over Ethernet for IPv4.
 	if arp.AddrType != layers.LinkTypeEthernet || arp.Protocol != layers.EthernetTypeIPv4 {
 		return ARPEvent{}, false
 	}

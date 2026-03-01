@@ -11,8 +11,8 @@ type CaptureOptions struct {
 	Iface      string
 	SnapLen    int
 	Promisc    bool
-	Timeout    time.Duration // pcap timeout; для чтения часто ок 500ms..2s или BlockForever
-	BufferSize int           // 0 = не трогаем
+	Timeout    time.Duration // pcap timeout; for reading often 500ms..2s or BlockForever
+	BufferSize int           // 0 = don't touch
 }
 
 func OpenPcapHandle(opts CaptureOptions) (*pcap.Handle, error) {

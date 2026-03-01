@@ -49,7 +49,7 @@ func SniffARP(ctx context.Context, opts SniffOptions, cb func(core.ARPEvent)) er
 		return err
 	}
 
-	// Вариант без PacketSource: меньше магии, проще обрабатывать таймауты.
+	// Variant without PacketSource: less magic, easier to handle timeouts.
 	for {
 		select {
 		case <-ctx.Done():
@@ -59,17 +59,17 @@ func SniffARP(ctx context.Context, opts SniffOptions, cb func(core.ARPEvent)) er
 
 		data, ci, err := h.ReadPacketData()
 		if err != nil {
-			// Таймаут чтения в libpcap обычно возвращается как pcap.NextErrorTimeoutExpired.
+			// Read timeout in libpcap is usually returned as pcap.NextErrorTimeoutExpired.
 			if err == pcap.NextErrorTimeoutExpired {
 				continue
 			}
 			return fmt.Errorf("pcap read: %w", err)
 		}
 
-		// Декодируем только то, что нужно.
+		// Decode only what we need.
 		p := gopacket.NewPacket(data, h.LinkType(), gopacket.NoCopy)
-		// Проставим timestamp из CaptureInfo (Packet.Metadata() иногда пустой при ручном NewPacket).
-		// Поэтому: если DecodeARPEvent вернул нулевой Timestamp, подставим ci.Timestamp.
+		// Set timestamp from CaptureInfo (Packet.Metadata() is sometimes empty when manually creating NewPacket).
+		// Therefore: if DecodeARPEvent returns zero Timestamp, substitute with ci.Timestamp.
 		e, ok := core.DecodeARPEvent(p)
 		if !ok {
 			continue

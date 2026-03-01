@@ -107,14 +107,14 @@ func ResolveMACByARP(ctx context.Context, opts ResolveOptions, myIP netip.Addr, 
 				e.Timestamp = ci.Timestamp
 			}
 
-			// Нужен reply от targetIP, адресованный нам (желательно).
+			// Need reply from targetIP addressed to us (preferably).
 			if e.Op != core.ARPOpReply {
 				continue
 			}
 			if e.SenderIP != targetIP {
 				continue
 			}
-			// Обычно reply идёт "to myIP", но иногда можно поймать и не строго.
+			// Usually reply goes "to myIP", but sometimes we can catch it loosely.
 			if e.TargetIP.IsValid() && e.TargetIP != myIP {
 				continue
 			}

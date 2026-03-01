@@ -83,7 +83,7 @@ func (sc *StatsCollector) SetDrops(d int) {
 func (sc *StatsCollector) ObserveEthernet(ts time.Time, src, dst net.HardwareAddr, frameLen int) {
 	sc.s.TotalEtherFrames++
 
-	// unique MAC: обычно считают src и dst
+	// unique MAC: usually count src and dst
 	if len(src) == 6 {
 		sc.s.UniqueMACs[src.String()] = struct{}{}
 	}
@@ -110,7 +110,7 @@ func (sc *StatsCollector) ObserveEthernet(ts time.Time, src, dst net.HardwareAdd
 		}
 	}
 
-	// периодически чистим pending, чтобы не росло
+	// periodically clean pending to prevent growth
 	sc.corr.Cleanup(ts)
 }
 
@@ -128,6 +128,6 @@ func (sc *StatsCollector) ObserveARP(e core.ARPEvent) {
 }
 
 func (sc *StatsCollector) Snapshot() Stats {
-	// возвращаем копию (map оставляем как есть или копируем — для CLI не критично)
+	// return copy (map left as is or copied — for CLI not critical)
 	return sc.s
 }

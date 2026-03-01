@@ -30,7 +30,7 @@ func (c *ARPCorrelator) OnARP(e ARPEvent) {
 	case ARPOpReply:
 		if k, ok := KeyFromReplyAsRequestKey(e); ok {
 			if tReq, exists := c.pending[k]; exists {
-				// матчим только если reply пришёл в окно
+				// match only if reply arrived within the window
 				if !e.Timestamp.IsZero() && !tReq.IsZero() && e.Timestamp.Sub(tReq) <= c.window {
 					c.matched++
 					delete(c.pending, k)
@@ -41,7 +41,7 @@ func (c *ARPCorrelator) OnARP(e ARPEvent) {
 }
 
 func (c *ARPCorrelator) Cleanup(now time.Time) {
-	// выкидываем старые pending, чтобы map не рос
+	// remove old pending to prevent map growth
 	for k, t := range c.pending {
 		if !t.IsZero() && now.Sub(t) > c.window {
 			delete(c.pending, k)
