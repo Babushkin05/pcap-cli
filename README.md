@@ -69,7 +69,7 @@ The CLI is organized into subcommands (see `./cmd/*.go`). Available commands inc
 - **stats**: show capture statistics for Ethernet/ARP traffic
 - **router-mac**: resolve the router/gateway MAC address
 
-#### New DNS Commands (HW3 Extension)
+#### New DNS Commands
 - **dns-sniff**: capture and display all DNS packets on the network
 - **dns-lookup**: lookup DNS records for a domain (currently supports MX records)
 - **dns-root**: query root DNS servers and compare with local DNS resolver
@@ -80,10 +80,27 @@ To see available commands and flags:
 ./build/pcap-cli <command> --help
 ```
 
-### Notes
-- Capturing traffic often requires root/administrator privileges.
-- Make sure you select the correct network interface in your config (or via flags, if supported).
-- If you are on Windows, ensure Npcap is installed and accessible.
+## DNS Functionality
+
+This tool provides the following DNS-related requirements using PCAP:
+
+- **Захват всех пакетов DNS**: Команда `dns-sniff` захватывает все DNS-пакеты на сетевом интерфейсе в реальном времени
+- **Поиск IP-адреса почтового сервиса по доменному имени D**: Команда `dns-lookup` с типом MX позволяет находить почтовые серверы по доменному имени
+- **Обращение к корневому DNS-серверу**: Команда `dns-root` демонстрирует работу с корневыми DNS-серверами и сравнивает результаты с локальным резолвером
+
+### Features
+
+1. **DNS Packet Capture (`dns-sniff`)**: Real-time capture and display of all DNS packets flowing through the network interface
+2. **DNS Record Lookup (`dns-lookup`)**: Lookup various DNS record types including MX records for mail servers
+3. **Root Server Queries (`dns-root`)**: Demonstrates the process of querying root DNS servers and compares with local DNS resolver behavior
+
+### Technical Implementation
+
+- Uses PCAP library for low-level packet capture 
+- Implements custom DNS packet parsing and construction
+- Supports multiple DNS record types (A, MX, etc.)
+- Provides conceptual implementation for root server queries (with explanation of network privilege requirements)
+- Integrates seamlessly with existing ARP functionality
 
 ## Examples
 
@@ -120,7 +137,7 @@ vladimir-babushkin pcap-cli % sudo ./build/pcap-cli sniff --config cfg.yaml
 2026-03-01T17:03:47.358194+03:00 ARP who-has 192.168.0.30 tell 192.168.0.1 | eth 11:22:33:44:55:66 -> ff:ff:ff:ff:ff:ff | sha=11:22:33:44:55:66 tha=00:00:00:00:00:00
 ```
 
-### DNS Commands (HW3 Extension)
+### DNS Commands
 
 #### DNS Sniffing
 ```
@@ -139,3 +156,29 @@ sudo ./build/pcap-cli dns-root github.com --config cfg.yaml
 sudo ./build/pcap-cli dns-root hse.ru --config cfg.yaml
 sudo ./build/pcap-cli dns-root draw.io --config cfg.yaml
 ```
+### Notes
+- Capturing traffic often requires root/administrator privileges.
+- Make sure you select the correct network interface in your config (or via flags, if supported).
+- If you are on Windows, ensure Npcap is installed and accessible.
+
+## DNS Functionality
+
+This tool provides the following DNS-related requirements using PCAP:
+
+- **Захват всех пакетов DNS**: Команда `dns-sniff` захватывает все DNS-пакеты на сетевом интерфейсе в реальном времени
+- **Поиск IP-адреса почтового сервиса по доменному имени D**: Команда `dns-lookup` с типом MX позволяет находить почтовые серверы по доменному имени
+- **Обращение к корневому DNS-серверу**: Команда `dns-root` демонстрирует работу с корневыми DNS-серверами и сравнивает результаты с локальным резолвером
+
+### Features
+
+1. **DNS Packet Capture (`dns-sniff`)**: Real-time capture and display of all DNS packets flowing through the network interface
+2. **DNS Record Lookup (`dns-lookup`)**: Lookup various DNS record types including MX records for mail servers
+3. **Root Server Queries (`dns-root`)**: Demonstrates the process of querying root DNS servers and compares with local DNS resolver behavior
+
+### Technical Implementation
+
+- Uses PCAP library for low-level packet capture 
+- Implements custom DNS packet parsing and construction
+- Supports multiple DNS record types (A, MX, etc.)
+- Provides conceptual implementation for root server queries (with explanation of network privilege requirements)
+- Integrates seamlessly with existing ARP functionality
