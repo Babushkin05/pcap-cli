@@ -37,6 +37,13 @@ func newRootCmd() *cobra.Command {
 	cmd.AddCommand(newSniffCmd(app))
 	cmd.AddCommand(newRouterMACCmd(app))
 	cmd.AddCommand(newStatsCmd(app))
+	cmd.AddCommand(newDnsSniffCmd(app))
+	cmd.AddCommand(newDnsLookupCmd(app))
+	cmd.AddCommand(newDnsRootCmd(app))
 
 	return cmd
+}
+
+func Execute() error {
+	return newRootCmd().Execute()
 }

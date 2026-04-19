@@ -1,7 +1,8 @@
 # pcap-cli
 
-`pcap-cli` is a small command-line tool for capturing and analyzing network traffic using PCAP.  
-It provides commands to sniff packets, print capture statistics, and resolve the router (gateway) MAC address (depending on your platform/network setup).
+`pcap-cli` is a small command-line tool for capturing and analyzing network traffic using PCAP.
+It provides commands to sniff packets, print capture statistics, resolve the router (gateway) MAC address, and now also includes DNS analysis capabilities (HW3 extension).
+Depending on your platform/network setup.
 
 ## How to build
 
@@ -61,10 +62,17 @@ sudo ./build/pcap-cli --help
 ```
 
 ### Commands
-The CLI is organized into subcommands (see `./cmd/*.go`). Common actions include:
-- **sniff**: capture packets on an interface and print/process them
-- **stats**: show capture statistics
+The CLI is organized into subcommands (see `./cmd/*.go`). Available commands include:
+
+#### Original Commands
+- **sniff**: capture ARP packets on an interface and print them
+- **stats**: show capture statistics for Ethernet/ARP traffic
 - **router-mac**: resolve the router/gateway MAC address
+
+#### New DNS Commands (HW3 Extension)
+- **dns-sniff**: capture and display all DNS packets on the network
+- **dns-lookup**: lookup DNS records for a domain (currently supports MX records)
+- **dns-root**: query root DNS servers and compare with local DNS resolver
 
 To see available commands and flags:
 ```bash
@@ -110,4 +118,24 @@ vladimir-babushkin pcap-cli % sudo ./build/pcap-cli sniff --config cfg.yaml
 2026-03-01T17:03:27.912297+03:00 ARP reply 192.168.0.1 is-at 11:22:33:44:55:66 (to 192.168.0.10) | eth 11:22:33:44:55:66 -> aa:bb:cc:dd:ee:ff
 2026-03-01T17:03:46.334229+03:00 ARP who-has 192.168.0.30 tell 192.168.0.1 | eth 11:22:33:44:55:66 -> ff:ff:ff:ff:ff:ff | sha=11:22:33:44:55:66 tha=00:00:00:00:00:00
 2026-03-01T17:03:47.358194+03:00 ARP who-has 192.168.0.30 tell 192.168.0.1 | eth 11:22:33:44:55:66 -> ff:ff:ff:ff:ff:ff | sha=11:22:33:44:55:66 tha=00:00:00:00:00:00
+```
+
+### DNS Commands (HW3 Extension)
+
+#### DNS Sniffing
+```
+sudo ./build/pcap-cli dns-sniff --config cfg.yaml
+```
+
+#### DNS Lookup (MX Records)
+```
+sudo ./build/pcap-cli dns-lookup example.com --config cfg.yaml
+sudo ./build/pcap-cli dns-lookup example.com -t MX --config cfg.yaml
+```
+
+#### Root DNS Queries
+```
+sudo ./build/pcap-cli dns-root github.com --config cfg.yaml
+sudo ./build/pcap-cli dns-root hse.ru --config cfg.yaml
+sudo ./build/pcap-cli dns-root draw.io --config cfg.yaml
 ```
